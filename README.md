@@ -1,4 +1,4 @@
-#Interactive Punnett Square
+## Interactive Punnett Square
 [TODO: add title, description, setting parameters, etc.]
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
