@@ -1,0 +1,17 @@
+.square-wrap {
+  display: flex;
+  align-items: center;
+
+  > div {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+.spacer, .mother {
+  flex-grow: 1;
+}
+
+.father, .result {
+  flex-grow: 2;
+}

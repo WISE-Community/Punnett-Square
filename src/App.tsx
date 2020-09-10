@@ -14,14 +14,14 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="App">
+      <div>
         <h2>Interactive Punnet Square</h2>
         <p>Drag an allele to each of the four drop spots. Each parent gets two alleles.</p>
         <div className="wrap">
           <div className="choices">
             {this.state.choices.map((choice, index) => <Choice key={index} allele={choice} />)}
           </div>
-          {/* <Square parents={this.state.parents} /> */}
+          <Square />
         </div>
       </div>
     )
