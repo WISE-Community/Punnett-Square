@@ -16,7 +16,26 @@ class Square extends React.Component {
           <div className="mother">
             <Parent title={'Mother'} vertical={true} />
           </div>
-          <div className="result"></div>
+          <div className="result">
+            <table>
+              <tr>
+                <td>
+                  {/* <Result /> */}
+                </td>
+                <td>
+                  {/* <Result /> */}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {/* <Result /> */}
+                </td>
+                <td>
+                  {/* <Result /> */}
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     )

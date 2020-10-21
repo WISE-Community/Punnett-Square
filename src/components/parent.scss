@@ -1,0 +1,38 @@
+h5 {
+  margin: 0;
+}
+
+.parent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &.vertical {
+    flex-direction: row;
+    
+    h5 {
+      transform: rotate(270deg);
+      margin-right: -12px;
+    }
+  }
+}
+
+.targets {
+  display: flex;
+  flex-direction: row;
+
+  .vertical & {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.target {
+  padding: 4px;
+  margin: 8px;
+  min-width: 40px;
+  min-height: 44px;
+  background-color: #eeeeee;
+  border: 1px solid #aaaaaa;
+  border-radius: 4px;
+}

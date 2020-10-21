@@ -3,8 +3,8 @@
   align-items: center;
 
   > div {
-    width: 100px;
-    height: 100px;
+    min-width: 108px;
+    min-height: 88px;
   }
 }
 
@@ -14,4 +14,23 @@
 
 .father, .result {
   flex-grow: 2;
+}
+
+.result {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 124px;
+}
+
+table {
+  border: 1px solid #aaaaaa;
+  border-collapse: collapse;
+}
+
+td {
+  border: 1px solid #aaaaaa;
+  padding: 4px;
+  min-width: 52px;
+  height: 48px;
 }
