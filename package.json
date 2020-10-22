@@ -2,7 +2,9 @@
   "name": "punnett-square-react",
   "version": "0.1.0",
   "author:": "Jonathan Lim-Breitbart <breity10@gmail.com>",
-  "contributors": ["Eric Khumalo"],
+  "contributors": [
+    "Eric Khumalo"
+  ],
   "license": "MIT",
   "private": true,
   "dependencies": {
@@ -15,6 +17,7 @@
     "@types/react-dom": "^16.9.8",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
+    "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
     "typescript": "^4.0.2"
@@ -38,5 +41,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react-beautiful-dnd": "^13.0.0"
   }
 }

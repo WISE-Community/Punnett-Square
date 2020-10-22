@@ -2,19 +2,19 @@ import React from 'react';
 import './square.scss';
 import Parent from './parent';
 
-class Square extends React.Component {
+class Square extends React.Component<{ parentTitles: String[] }> {
   render() {
     return (
       <div>
         <div className="square-wrap">
           <div className="spacer"></div>
-          <div className="father">
-            <Parent title={'Father'} />
+          <div className="parent1">
+            <Parent title={this.props.parentTitles[0]} />
           </div>
         </div>
         <div className="square-wrap">
-          <div className="mother">
-            <Parent title={'Mother'} vertical={true} />
+          <div className="parent2">
+            <Parent title={this.props.parentTitles[1]} vertical={true} />
           </div>
           <div className="result">
             <table>
