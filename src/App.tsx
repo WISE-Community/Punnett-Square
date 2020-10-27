@@ -4,28 +4,59 @@ import './App.scss';
 import Choice from './components/choice';
 import Square from './components/square';
 import { Allele } from './domain/allele';
+import { Target } from './domain/target';
 
 class App extends React.Component {
   state = {
     choices: [
-      new Allele('allele1', true, 'A'),
-      new Allele('allele2', false, 'a')
+      new Allele('allele0', true, 'A'),
+      new Allele('allele1', false, 'a')
     ],
-    parentTitles: [
-      'Father',
-      'Mother'
+    parents: [
+      {
+        title: 'Mother',
+        targets: [
+          new Target('Mother-0'),
+          new Target('Mother-1')
+        ]
+      },
+      {
+        title: 'Father',
+        targets: [
+          new Target('Father-0'),
+          new Target('Father-1')
+        ]
+      }
     ]
   };
 
   onDragEnd = (result: any) => {
     const { source, destination, draggableId } = result;
-
-    // dropped outside the list
     if (!destination) {
         return;
     }
-
+    this.setTarget(destination.droppableId, draggableId);
     console.log(`target: ${destination.droppableId}, allele: ${draggableId}`)
+  }
+
+  setTarget(droppableId: string, draggableId: string) {
+    const parentDroppable = droppableId.split('-');
+    const title = parentDroppable[0];
+    const index = parseInt(parentDroppable[1]);
+    for (const parent of this.state.parents) {
+      if (title === parent.title) {
+        parent.targets[index].allele = this.getChoice(draggableId);
+        break;
+      }
+    }
+  }
+
+  getChoice(draggableId: string) {
+    for (const choice of this.state.choices) {
+      if (draggableId === choice.id) {
+        return choice;
+      }
+    }
   }
 
   render() {
@@ -39,7 +70,7 @@ class App extends React.Component {
               {(provided, snapshot) => (
                   <div className="choices" ref={provided.innerRef} {...provided.droppableProps}>
                     {this.state.choices.map((choice, index) => 
-                      <Draggable draggableId={`allele${index}`} index={index}>
+                      <Draggable key={index} draggableId={`allele${index}`} index={index}>
                         {(provided, snapshot) => (
                           <div ref={provided.innerRef}
                               {...provided.draggableProps}
@@ -52,7 +83,7 @@ class App extends React.Component {
                   </div>
               )}
             </Droppable>
-            <Square parentTitles={this.state.parentTitles}/>
+            <Square parents={this.state.parents}/>
           </DragDropContext>
         </div>
       </div>
