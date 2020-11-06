@@ -28,11 +28,26 @@ h5 {
 }
 
 .target {
-  padding: 4px;
+  padding: 2px;
   margin: 8px;
   min-width: 40px;
   min-height: 44px;
-  background-color: #eeeeee;
   border: 1px solid #aaaaaa;
+  background-color: #eeeeee;
   border-radius: 4px;
+  transition: background-color 100ms;
+
+  .choice {
+    background-color: dodgerblue;
+    transition: opacity 100ms;
+  }
+}
+
+.hover {
+  background-color: #cccccc;
+  border-color: #999999;
+
+  .choice {
+    opacity: .2;
+  }
 }

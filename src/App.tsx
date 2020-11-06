@@ -2,32 +2,17 @@ import React from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import './App.scss';
 import Choice from './components/choice';
+import Parent from './components/parent';
 import Square from './components/square';
 import { Allele } from './domain/allele';
 import { Target } from './domain/target';
 
 class App extends React.Component {
+  settings = require('./settings.json');
   state = {
-    choices: [
-      new Allele('allele0', true, 'A'),
-      new Allele('allele1', false, 'a')
-    ],
-    parents: [
-      {
-        title: 'Mother',
-        targets: [
-          new Target('Mother-0'),
-          new Target('Mother-1')
-        ]
-      },
-      {
-        title: 'Father',
-        targets: [
-          new Target('Father-0'),
-          new Target('Father-1')
-        ]
-      }
-    ]
+    choices: new Array<Allele>(),
+    parents: new Array<any>(),
+    result: ['','','','']
   };
 
   onDragEnd = (result: any) => {
@@ -42,10 +27,14 @@ class App extends React.Component {
   setTarget(droppableId: string, draggableId: string) {
     const parentDroppable = droppableId.split('-');
     const title = parentDroppable[0];
-    const index = parseInt(parentDroppable[1]);
-    for (const parent of this.state.parents) {
+    const targetIndex = parseInt(parentDroppable[1]);
+    for (const [parentIndex, parent] of this.state.parents.entries()) {
       if (title === parent.title) {
-        parent.targets[index].allele = this.getChoice(draggableId);
+        const allele = this.getChoice(draggableId);
+        parent.targets[targetIndex].allele = allele;
+        if (allele) {
+          this.setResult(parentIndex, targetIndex, allele.name);
+        }
         break;
       }
     }
@@ -59,7 +48,47 @@ class App extends React.Component {
     }
   }
 
+  setResult(parentIndex: number, targetIndex: number, alleleName: string) {
+    const partner = this.state.parents[1-parentIndex];
+    const newResult = this.state.result.slice();
+    for (const [partnerTargetIndex, partnerTarget] of partner.targets.entries()) {
+      const allele = partnerTarget.allele;
+      if (allele) {
+        const resultText = parentIndex === 0 ? `${allele.name}${alleleName}` : `${alleleName}${allele.name}`;
+        const resultIndex = parentIndex === 0 ? this.getResultIndex(targetIndex, partnerTargetIndex) :
+            this.getResultIndex(partnerTargetIndex, targetIndex);
+        newResult[resultIndex] = resultText;
+      }
+    }
+    this.setState({result: newResult});
+    console.log(this.state.result);
+  }
+
+  getResultIndex(motherTargetIndex: number, fatherTargetIndex: number) {
+    return motherTargetIndex + fatherTargetIndex * 2;
+  }
+
+  init() {
+    this.state.choices = new Array<Allele>();
+    this.settings.alleles.map((allele: string, index: number) => {
+      this.state.choices.push(new Allele(`allele${index}`, allele));
+    });
+    this.state.parents = new Array<any>();
+    this.settings.parents.map((parent: string, index: number) => {
+      this.state.parents.push({
+        title: parent,
+        targets: [
+          new Target(`${parent}-0`),
+          new Target(`${parent}-1`)
+        ]
+      });
+    });
+  }
+
   render() {
+    this.init();
+    console.log(this.state);
+
     return (
       <div>
         <h2>Interactive Punnet Square</h2>
@@ -68,22 +97,38 @@ class App extends React.Component {
           <DragDropContext onDragEnd={this.onDragEnd}>
             <Droppable droppableId="choices">
               {(provided, snapshot) => (
-                  <div className="choices" ref={provided.innerRef} {...provided.droppableProps}>
-                    {this.state.choices.map((choice, index) => 
-                      <Draggable key={index} draggableId={`allele${index}`} index={index}>
-                        {(provided, snapshot) => (
-                          <div ref={provided.innerRef}
+                <div className="choices" ref={provided.innerRef} {...provided.droppableProps}>
+                  <h5>Alleles</h5>
+                  {this.state.choices.map((choice, index) => 
+                    <Draggable key={index} draggableId={`allele${index}`} index={index}>
+                      {(provided, snapshot) => {
+                        return (
+                          <div className="choice-wrap" ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}>
                             <Choice allele={choice}/>
                           </div>
-                        )}
-                      </Draggable>
-                    )}
-                  </div>
+                        );
+                      }}
+                    </Draggable>
+                  )}
+                </div>
               )}
             </Droppable>
-            <Square parents={this.state.parents}/>
+            <div>
+              <div className="square-wrap">
+                <div className="spacer"></div>
+                <div className="parent1">
+                  <Parent title={this.state.parents[0].title} targets={this.state.parents[0].targets} />
+                </div>
+              </div>
+              <div className="square-wrap">
+                <div className="parent2">
+                  <Parent title={this.state.parents[1].title} targets={this.state.parents[1].targets} vertical={true} />
+                </div>
+                  <Square result={this.state.result}/>
+              </div>
+            </div>
           </DragDropContext>
         </div>
       </div>

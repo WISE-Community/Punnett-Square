@@ -1,22 +1,4 @@
-.square-wrap {
-  display: flex;
-  align-items: center;
-
-  > div {
-    min-width: 108px;
-    min-height: 88px;
-  }
-}
-
-.spacer, .parent2 {
-  flex-grow: 1;
-}
-
-.parent1, .result {
-  flex-grow: 2;
-}
-
-.result {
+.square {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,4 +15,6 @@ td {
   padding: 4px;
   min-width: 52px;
   height: 48px;
+  font-weight: 500;
+  font-size: 1.2rem;
 }
