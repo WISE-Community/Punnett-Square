@@ -4,30 +4,31 @@ import { Target } from '../domain/target';
 import './parent.scss';
 
 export default class Parent extends React.Component<{ title: String, targets: Target[], vertical?: Boolean }> {
-  state = {
-    allele1: null,
-    allele2: null
-  }
-
   render() {
+    const alleles = [
+      this.props.targets[0].allele,
+      this.props.targets[1].allele
+    ];
+
     return (
-      <div className={`parent ${this.props.vertical ? "vertical" : ""}`}>
+      <div className={`parent ${this.props.vertical ? 'vertical' : ''}`}>
         <h5>{this.props.title}</h5>
         <div className="targets">
-          <Droppable droppableId={`${this.props.title}-0`}>
-            {(provided, snapshot) => (
-              <div className="target" ref={provided.innerRef}>
-                {this.props.targets[0].allele?.name}
-              </div>
-            )}
-          </Droppable>
-          <Droppable droppableId={`${this.props.title}-1`}>
-            {(provided, snapshot) => (
-              <div className="target" ref={provided.innerRef}>
-                {this.props.targets[1].allele?.name}
-              </div>
-            )}
-          </Droppable>
+          {alleles.map((allele, index) => {
+            return (
+              <Droppable key={index} droppableId={`${this.props.title}-${index}`}>
+                {(provided, snapshot) => (
+                  <div className={`target ${snapshot.isDraggingOver ? 'hover' : ''}`} 
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}>
+                    <span className={allele ? 'choice' : ''}>
+                      {allele?.name}
+                    </span>
+                  </div>
+                )}
+              </Droppable>
+            )
+          })}
         </div>
       </div>
     );
