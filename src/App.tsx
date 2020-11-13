@@ -8,12 +8,49 @@ import { Allele } from './domain/allele';
 import { Target } from './domain/target';
 
 class App extends React.Component {
-  settings = require('./settings.json');
+  settings = require(`./punnett-settings.json`);
   state = {
     choices: new Array<Allele>(),
     parents: new Array<any>(),
     result: ['','','','']
   };
+  isClean: boolean = true;
+
+  constructor(props: any) {
+    super(props);
+    this.reset = this.reset.bind(this);
+    this.init = this.init.bind(this);
+    this.initParents = this.initParents.bind(this);
+    this.init();
+  }
+
+  init() {
+    this.state.choices = new Array<Allele>();
+    this.settings.alleles.map((allele: string, index: number) => {
+      this.state.choices.push(new Allele(`allele${index}`, allele));
+    });
+    this.state.parents = this.initParents();
+  }
+
+  initParents() {
+    const parents = new Array<any>();
+    this.settings.parents.map((parent: string, index: number) => {
+      parents.push({
+        title: parent,
+        targets: [
+          new Target(`${parent}-0`),
+          new Target(`${parent}-1`)
+        ]
+      });
+    });
+    return parents;
+  }
+
+  reset() {
+    this.setState({parents: this.initParents()});
+    this.setState({result: ['','','','']});
+    this.isClean = true;
+  }
 
   onDragEnd = (result: any) => {
     const { source, destination, draggableId } = result;
@@ -21,7 +58,6 @@ class App extends React.Component {
         return;
     }
     this.setTarget(destination.droppableId, draggableId);
-    console.log(`target: ${destination.droppableId}, allele: ${draggableId}`)
   }
 
   setTarget(droppableId: string, draggableId: string) {
@@ -33,6 +69,7 @@ class App extends React.Component {
         const allele = this.getChoice(draggableId);
         parent.targets[targetIndex].allele = allele;
         if (allele) {
+          this.isClean = false;
           this.setResult(parentIndex, targetIndex, allele.name);
         }
         break;
@@ -49,6 +86,7 @@ class App extends React.Component {
   }
 
   setResult(parentIndex: number, targetIndex: number, alleleName: string) {
+    // console.log(this.state);
     const partner = this.state.parents[1-parentIndex];
     const newResult = this.state.result.slice();
     for (const [partnerTargetIndex, partnerTarget] of partner.targets.entries()) {
@@ -60,35 +98,17 @@ class App extends React.Component {
         newResult[resultIndex] = resultText;
       }
     }
-    this.setState({result: newResult});
-    console.log(this.state.result);
+    this.setState({result: newResult}, () => {
+      console.log(`set result:`);
+      console.log(this.state);
+    });
   }
 
   getResultIndex(motherTargetIndex: number, fatherTargetIndex: number) {
     return motherTargetIndex + fatherTargetIndex * 2;
   }
 
-  init() {
-    this.state.choices = new Array<Allele>();
-    this.settings.alleles.map((allele: string, index: number) => {
-      this.state.choices.push(new Allele(`allele${index}`, allele));
-    });
-    this.state.parents = new Array<any>();
-    this.settings.parents.map((parent: string, index: number) => {
-      this.state.parents.push({
-        title: parent,
-        targets: [
-          new Target(`${parent}-0`),
-          new Target(`${parent}-1`)
-        ]
-      });
-    });
-  }
-
   render() {
-    this.init();
-    console.log(this.state);
-
     return (
       <div>
         <h2>Interactive Punnet Square</h2>
@@ -117,7 +137,9 @@ class App extends React.Component {
             </Droppable>
             <div>
               <div className="square-wrap">
-                <div className="spacer"></div>
+                <div className="spacer">
+                  {this.isClean ? null : <button onClick={this.reset} disabled={this.isClean}>Reset</button> }
+                </div>
                 <div className="parent1">
                   <Parent title={this.state.parents[0].title} targets={this.state.parents[0].targets} />
                 </div>
@@ -126,7 +148,7 @@ class App extends React.Component {
                 <div className="parent2">
                   <Parent title={this.state.parents[1].title} targets={this.state.parents[1].targets} vertical={true} />
                 </div>
-                  <Square result={this.state.result}/>
+                <Square result={this.state.result}/>
               </div>
             </div>
           </DragDropContext>

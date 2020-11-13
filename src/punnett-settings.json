@@ -1,0 +1,6 @@
+{
+  "title": "Interactive Punnet Square",
+  "instructions": "Drag an allele to each of the four drop spots. Each parent gets two alleles.",
+  "alleles": ["A", "a"],
+  "parents": ["Mother", "Father"]
+}
