@@ -1,5 +1,5 @@
 ## Interactive Punnett Square
-Drag alleles to set parent traits. App displays a completed Punnett Square once each parent trait is set.
+Drag alleles to set parent traits. App displays a completed Punnett Square once each parent allele is set.
 
 You can configure the model at the beginning by passing in these GET parameters:
 - title (string; default: 'Interactive Punnett Square')
