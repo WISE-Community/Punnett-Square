@@ -1,5 +1,11 @@
 ## Interactive Punnett Square
-[TODO: add title, description, setting parameters, etc.]
+Drag alleles to set parent traits. App displays a completed Punnett Square once each parent trait is set.
+
+You can configure the model at the beginning by passing in these GET parameters:
+- title (string; default: 'Interactive Punnett Square')
+- description (string; default: 'Drag an allele to each of the four drop spots. Each parent gets two alleles.')
+- alleles (two strings, comma separated; default: 'A,a')
+- parents (two strings, comma separated; default: 'Mother,Father')
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

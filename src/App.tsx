@@ -12,7 +12,9 @@ class App extends React.Component {
   state = {
     choices: new Array<Allele>(),
     parents: new Array<any>(),
-    result: ['','','','']
+    result: ['','','',''],
+    instructions: '',
+    title: ''
   };
   isClean: boolean = true;
 
@@ -25,11 +27,30 @@ class App extends React.Component {
   }
 
   init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.parseParams(urlParams);
     this.state.choices = new Array<Allele>();
     this.settings.alleles.map((allele: string, index: number) => {
       this.state.choices.push(new Allele(`allele${index}`, allele));
     });
     this.state.parents = this.initParents();
+    this.state.title = this.settings.title;
+    this.state.instructions = this.settings.instructions;
+  }
+
+  parseParams(urlParams: URLSearchParams) {
+    if (urlParams.get('alleles')) {
+      this.settings.alleles = urlParams.get('alleles')?.split(',');
+    }
+    if (urlParams.get('parents')) {
+      this.settings.parents = urlParams.get('parents')?.split(',');
+    }
+    if (urlParams.get('instructions')) {
+      this.settings.instructions = urlParams.get('instructions');
+    }
+    if (urlParams.get('title')) {
+      this.settings.title = urlParams.get('title');
+    }
   }
 
   initParents() {
@@ -111,8 +132,8 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h2>Interactive Punnet Square</h2>
-        <p>Drag an allele to each of the four drop spots. Each parent gets two alleles.</p>
+        <h2>{this.state.title}</h2>
+        <p>{this.state.instructions}</p>
         <div className="wrap">
           <DragDropContext onDragEnd={this.onDragEnd}>
             <Droppable droppableId="choices">
